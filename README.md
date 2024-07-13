@@ -40,11 +40,11 @@ This will start the development server and open the application in your default 
 
 ## Code Overview
 
-App.js
+- App.js
 
 The App.js file contains the main application component. It manages the state and handles user interactions.
 
-DataFetcher.js
+- DataFetcher.js
 
 The DataFetcher.js file contains the DataFetcher component, which fetches data from the Messari API.
 
