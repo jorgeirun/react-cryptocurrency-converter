@@ -7,7 +7,9 @@ function App() {
   const [symbols, setSymbols] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedSymbol, setSelectedSymbol] = useState('');
 
+  // Handles data fetched from request
   const handleDataFetched = (fetchedData) => {
     if (fetchedData.error) {
       setError(fetchedData.error);
@@ -21,6 +23,11 @@ function App() {
     setLoading(false);
   };
 
+  // Handles dropdown selection updates
+  const handleSelectChange = (event) => {
+    setSelectedSymbol(event.target.value)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -32,7 +39,7 @@ function App() {
             <div>
               <h1>Crypto Converter</h1>
               <h5>Select a Coin</h5>
-              <select id="symbolSelect">
+              <select id="symbolSelect" onChange={handleSelectChange}>
                 <option>--</option>
                 {symbols.map((coin, index) => (
                   <option key={index} value={coin.price_usd}>
@@ -43,9 +50,13 @@ function App() {
             </div>
           )}
           <br />
-          <input type="text" name="crypto_value" placeholder="1.234" value="1" />
+          <input type="text" name="crypto_value" placeholder="1.234"/>
           <br />
-          <input type="text" name="usd_value" placeholder="1,234.56" />
+          {selectedSymbol ? (
+            <input type="text" name="usd_value" placeholder="1,234.56" value={selectedSymbol} readOnly/>
+          ) : (
+            <p>Please select a symbol from the dropdown</p>
+          )}
         </form>
       </header>
     </div>

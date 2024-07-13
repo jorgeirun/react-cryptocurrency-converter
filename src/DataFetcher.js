@@ -15,7 +15,7 @@ function DataFetcher({ onDataFetched }) {
             }
         };
         fetchData();
-    });
+    }, []);
 
     return null;
 }
