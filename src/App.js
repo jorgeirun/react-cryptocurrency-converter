@@ -8,6 +8,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSymbol, setSelectedSymbol] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [cryptoValue, setCryptoValue] = useState(1);
+  const [calculatedValue, setCalculatedValue] = useState(0);
 
   // Handles data fetched from request
   const handleDataFetched = (fetchedData) => {
@@ -25,8 +28,18 @@ function App() {
 
   // Handles dropdown selection updates
   const handleSelectChange = (event) => {
-    setSelectedSymbol(event.target.value)
+    const selectedPrice = parseFloat(event.target.value);
+    setSelectedSymbol(event.target.options[event.target.selectedIndex].text);
+    setSelectedPrice(selectedPrice);
+    setCalculatedValue(selectedPrice * cryptoValue);
   }
+
+  // Handles crypto value input change
+  const handleCryptoValueChange = (event) => {
+    const value = parseFloat(event.target.value) || 0;
+    setCryptoValue(value);
+    setCalculatedValue(selectedPrice * value);
+  };
 
   return (
     <div className="App">
@@ -37,7 +50,7 @@ function App() {
         <form>
           {!loading && !error && (
             <div>
-              <h1>Crypto Converter</h1>
+              <h1>Convert crypto to USD</h1>
               <h5>Select a Coin</h5>
               <select id="symbolSelect" onChange={handleSelectChange}>
                 <option>--</option>
@@ -50,10 +63,24 @@ function App() {
             </div>
           )}
           <br />
-          <input type="text" name="crypto_value" placeholder="1.234"/>
+          <input
+            type="number"
+            name="crypto_value"
+            placeholder="1.234"
+            step="0.01"
+            min="0"
+            value={cryptoValue}
+            onChange={handleCryptoValueChange}
+          />
           <br />
           {selectedSymbol ? (
-            <input type="text" name="usd_value" placeholder="1,234.56" value={selectedSymbol} readOnly/>
+            <input
+              type="text"
+              name="usd_value"
+              placeholder="1,234.56"
+              value={calculatedValue.toFixed(2)}
+              readOnly
+            />
           ) : (
             <p>Please select a symbol from the dropdown</p>
           )}
