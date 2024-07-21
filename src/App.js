@@ -41,17 +41,33 @@ function App() {
     setCalculatedValue(selectedPrice * value);
   };
 
+  // Format the value with thousand separators and 2 decimals
+  const formattedValue = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(calculatedValue);
+
   return (
     <div className="App">
       <header className="App-header">
         <DataFetcher onDataFetched={handleDataFetched} />
         {loading && <p>Loading..</p>}
         {error && <p>Error: {error}</p>}
+
         <form>
           {!loading && !error && (
-            <div>
+            <div className="MainContent">
               <h1>Convert crypto to USD</h1>
               <h5>Select a Coin</h5>
+              <input
+                type="number"
+                name="crypto_value"
+                placeholder="1.234"
+                step="0.01"
+                min="0"
+                value={cryptoValue}
+                onChange={handleCryptoValueChange}
+              />
               <select id="symbolSelect" onChange={handleSelectChange}>
                 <option>--</option>
                 {symbols.map((coin, index) => (
@@ -60,30 +76,18 @@ function App() {
                   </option>
                 ))}
               </select>
+              {selectedSymbol ? (
+                <div className="App">
+                  <div className="displayValue" tabIndex="0">
+                    $ {formattedValue}
+                  </div>
+                </div>
+              ) : (
+                <p>Please select a symbol from the dropdown</p>
+              )}
             </div>
           )}
-          <br />
-          <input
-            type="number"
-            name="crypto_value"
-            placeholder="1.234"
-            step="0.01"
-            min="0"
-            value={cryptoValue}
-            onChange={handleCryptoValueChange}
-          />
-          <br />
-          {selectedSymbol ? (
-            <input
-              type="text"
-              name="usd_value"
-              placeholder="1,234.56"
-              value={calculatedValue.toFixed(2)}
-              readOnly
-            />
-          ) : (
-            <p>Please select a symbol from the dropdown</p>
-          )}
+
         </form>
       </header>
     </div>
